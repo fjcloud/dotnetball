@@ -6,7 +6,7 @@
         body {
             background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
             color: white;
-            font-family: Arial;
+            font-family: 'Arial', sans-serif;
             min-height: 100vh;
             margin: 0;
             display: flex;
@@ -16,8 +16,10 @@
         .container {
             text-align: center;
             padding: 2rem;
-            background: rgba(0,0,0,0.3);
+            background: rgba(0, 0, 0, 0.3);
             border-radius: 20px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
         }
         .magic-ball {
             width: 300px;
@@ -27,13 +29,16 @@
             margin: 2rem auto;
             position: relative;
             cursor: pointer;
-            transition: transform 0.3s;
-            box-shadow: inset -10px -10px 20px rgba(0,0,0,0.5);
+            transition: transform 0.3s ease;
+            box-shadow: inset -10px -10px 20px rgba(0, 0, 0, 0.5),
+                       inset 10px 10px 20px rgba(255, 255, 255, 0.1),
+                       0 0 50px rgba(0, 0, 0, 0.5);
         }
+        .magic-ball:hover { transform: scale(1.05); }
         .answer-window {
             width: 150px;
             height: 150px;
-            background: white;
+            background: radial-gradient(circle at center, #fff, #e0e0e0);
             border-radius: 50%;
             position: absolute;
             top: 75px;
@@ -41,15 +46,21 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            color: #000;
+            font-size: 1rem;
             padding: 1rem;
             text-align: center;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.2);
+            font-weight: bold;
         }
         @keyframes shake {
             0%, 100% { transform: rotate(0deg); }
-            25% { transform: rotate(-20deg); }
-            75% { transform: rotate(20deg); }
+            20% { transform: rotate(-20deg); }
+            40% { transform: rotate(20deg); }
+            60% { transform: rotate(-10deg); }
+            80% { transform: rotate(10deg); }
         }
-        .shaking { animation: shake 0.5s; }
+        .shaking { animation: shake 0.5s ease-in-out; }
     </style>
 </head>
 <body>
@@ -63,8 +74,10 @@
         async function askQuestion() {
             const ball = document.querySelector('.magic-ball');
             const answer = document.getElementById('answer');
+            
             ball.classList.add('shaking');
             answer.style.opacity = '0.3';
+            
             try {
                 const response = await fetch('/api/ask');
                 const data = await response.json();
@@ -76,9 +89,10 @@
                 answer.textContent = "Try again";
             }
         }
-        document.querySelector('.magic-ball').addEventListener('animationend', 
-            function() { this.classList.remove('shaking'); }
-        );
+
+        document.querySelector('.magic-ball').addEventListener('animationend', function() {
+            this.classList.remove('shaking');
+        });
     </script>
 </body>
 </html>
