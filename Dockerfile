@@ -10,6 +10,7 @@ RUN dotnet publish -c Release -o out
 FROM registry.access.redhat.com/ubi8/dotnet-80-runtime:8.0
 WORKDIR /app
 COPY --from=build /app/out .
+COPY --from=build /app/wwwroot ./wwwroot
 USER 1001
 EXPOSE 8080
 ENV ASPNETCORE_URLS=http://+:8080
