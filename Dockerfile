@@ -1,6 +1,9 @@
 FROM registry.access.redhat.com/ubi8/dotnet-80:8.0 AS build
 WORKDIR /app
+USER 0
 COPY . .
+RUN chown -R 1001:0 ./
+USER 1001
 RUN dotnet restore
 RUN dotnet publish -c Release -o out
 
